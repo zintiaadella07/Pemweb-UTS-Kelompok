@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <h1>Detail Pemesanan #<%= p.id_pemesanan %></h1>
+
+  <h3>Pelanggan</h3>
+  <table>
+    <tr><th>Nama</th><td><%= p.nama_pelanggan %></td></tr>
+    <tr><th>No. telepon</th><td><%= p.no_telepon || '-' %></td></tr>
+    <tr><th>Email</th><td><%= p.email || '-' %></td></tr>
+    <tr><th>Alamat</th><td><%= p.alamat || '-' %></td></tr>
+  </table>
+
+  <h3>Paket</h3>
+  <table>
+    <tr><th>Nama paket</th><td><%= p.nama_paket %></td></tr>
+    <tr><th>Harga satuan</th><td><%= formatRupiah(p.harga_paket) %></td></tr>
+    <tr><th>Kapasitas</th><td><%= p.kapasitas || '-' %></td></tr>
+    <tr><th>Tanggal pemesanan</th><td><%= formatTanggal(p.tanggal_pemesanan) %></td></tr>
+    <tr><th>Tanggal acara</th><td><%= formatTanggal(p.tanggal_acara) %></td></tr>
+    <tr><th>Jumlah paket</th><td><%= p.jumlah_paket %></td></tr>
+    <tr><th>Total harga</th><td><strong><%= formatRupiah(p.total_harga) %></strong></td></tr>
+  </table>
+
+  <h3>Isi Paket</h3>
+  <table>
+    <thead><tr><th>Menu</th><th>Kategori</th><th>Jumlah</th></tr></thead>
+    <tbody>
+      <% if (isiPaket.length === 0) { %><tr><td colspan="3">Paket ini belum berisi menu.</td></tr><% } %>
+      <% isiPaket.forEach(m => { %>
+        <tr><td><%= m.nama_menu %></td><td><%= m.kategori_menu %></td><td><%= m.jumlah %></td></tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h3>Pembayaran</h3>
+  <table>
+    <tr><th>Status</th><td><%- badgeStatus(p.status_pembayaran) %></td></tr>
+    <tr><th>Metode</th><td><%= p.metode_pembayaran || '-' %></td></tr>
+    <tr><th>Tanggal pembayaran</th><td><%= formatTanggal(p.tanggal_pembayaran) %></td></tr>
+    <tr><th>Jumlah bayar</th><td><%= formatRupiah(p.jumlah_bayar) %></td></tr>
+    <tr><th>Bukti pembayaran</th><td>
+      <% if (p.bukti_pembayaran) { %>
+        <% if (isPdf(p.bukti_pembayaran)) { %>
+          <a href="/uploads/bukti/<%= p.bukti_pembayaran %>" target="_blank">Buka PDF</a>
+        <% } else { %>
+          <a href="/uploads/bukti/<%= p.bukti_pembayaran %>" target="_blank"><img src="/uploads/bukti/<%= p.bukti_pembayaran %>" alt="Bukti pembayaran" style="max-width:240px"></a>
+        <% } %>
+      <% } else { %>-<% } %>
+    </td></tr>
+  </table>
+
+  <p>
+    <a href="/pemesanan" class="btn">Kembali</a>
+    <a href="/pemesanan/<%= p.id_pemesanan %>/edit" class="btn btn-primary">Edit</a>
+    <a href="/pelanggan/<%= p.id_pelanggan %>/riwayat" class="btn">Riwayat pelanggan</a>
+  </p>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <h1>Riwayat Pemesanan: <%= pelanggan.nama_pelanggan %></h1>
+  <p>Total pemesanan: <strong><%= daftar.length %></strong></p>
+  <table>
+    <thead>
+      <tr><th>No</th><th>Tgl Pesan</th><th>Paket</th><th>Tgl Acara</th><th>Jumlah</th><th>Total</th><th>Status</th><th>Aksi</th></tr>
+    </thead>
+    <tbody>
+      <% if (daftar.length === 0) { %><tr><td colspan="8">Pelanggan ini belum pernah memesan.</td></tr><% } %>
+      <% daftar.forEach((d, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= formatTanggal(d.tanggal_pemesanan) %></td>
+          <td><%= d.nama_paket %></td>
+          <td><%= formatTanggal(d.tanggal_acara) %></td>
+          <td><%= d.jumlah_paket %></td>
+          <td><%= formatRupiah(d.total_harga) %></td>
+          <td><%- badgeStatus(d.status_pembayaran) %></td>
+          <td><a href="/pemesanan/<%= d.id_pemesanan %>" class="btn">Detail</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <a href="/pelanggan" class="btn">Kembali ke Pelanggan</a>
+</main>
+<%- include('../partials/footer') %>
