@@ -1,0 +1,49 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<main class="container">
+  <h1>Daftar Pemesanan</h1>
+  <% if (sukses) { %><div class="alert alert-success"><%= sukses %></div><% } %>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <form method="GET" action="/pemesanan" class="filter">
+    <input type="text" name="q" placeholder="Cari nama pelanggan" value="<%= q %>">
+    <select name="status">
+      <option value="">Semua status</option>
+      <% STATUS.forEach(s => { %><option value="<%= s %>" <%= status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+    </select>
+    <button type="submit" class="btn">Cari</button>
+    <a href="/pemesanan" class="btn">Reset</a>
+    <a href="/pemesanan/tambah" class="btn btn-primary">+ Pemesanan Baru</a>
+  </form>
+
+  <table>
+    <thead>
+      <tr><th>No</th><th>Pelanggan</th><th>Paket</th><th>Tgl Acara</th><th>Jumlah</th><th>Total</th><th>Status</th><th>Aksi</th></tr>
+    </thead>
+    <tbody>
+      <% if (daftar.length === 0) { %>
+        <tr><td colspan="8">Belum ada data pemesanan.</td></tr>
+      <% } %>
+      <% daftar.forEach((d, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= d.nama_pelanggan %></td>
+          <td><%= d.nama_paket %></td>
+          <td><%= formatTanggal(d.tanggal_acara) %></td>
+          <td><%= d.jumlah_paket %></td>
+          <td><%= formatRupiah(d.total_harga) %></td>
+          <td><%- badgeStatus(d.status_pembayaran) %></td>
+          <td>
+            <a href="/pemesanan/<%= d.id_pemesanan %>" class="btn">Detail</a>
+            <a href="/pemesanan/<%= d.id_pemesanan %>/edit" class="btn">Edit</a>
+            <form action="/pemesanan/<%= d.id_pemesanan %>?_method=DELETE" method="POST" style="display:inline"
+                  onsubmit="return confirm('Hapus pemesanan ini?')">
+              <button type="submit" class="btn btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</main>
+<%- include('../partials/footer') %>
