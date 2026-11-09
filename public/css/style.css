@@ -576,3 +576,15 @@ footer {
     min-width: 700px;
   }
 }
+
+.pesan {
+  padding: 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+.pesan-error {
+  background: #d9534f;
+}
+.pesan-sukses {
+  background: #2e9e5b;
+}

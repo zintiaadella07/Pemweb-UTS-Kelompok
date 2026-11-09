@@ -5,10 +5,10 @@
   <h1>Daftar Paket Katering</h1>
 
   <% if (pesan) { %>
-    <p style="padding:10px;border-radius:6px;color:#fff;background:<%= pesan.includes('tidak bisa') ? '#d9534f' : '#2e9e5b' %>">
-      <%= pesan %>
-    </p>
-  <% } %>
+  <p class="pesan <%= pesan.includes('tidak bisa') ? 'pesan-error' : 'pesan-sukses' %>">
+    <%= pesan %>
+  </p>
+<% } %>
 
   <p><a href="/paket/tambah">+ Tambah Paket</a></p>
 
