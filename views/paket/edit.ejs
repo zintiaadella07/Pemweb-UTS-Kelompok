@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container">
+  <h1>Edit Paket Katering</h1>
+
+  <% if (errors.length > 0) { %>
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form action="/paket/<%= data.id %>/edit"
+        method="POST"
+        enctype="multipart/form-data">
+
+    <label>Nama Paket</label>
+    <input type="text" name="nama_paket"
+      value="<%= data.nama_paket || '' %>" required>
+
+    <label>Deskripsi</label>
+    <textarea name="deskripsi"><%= data.deskripsi || '' %></textarea>
+
+    <label>Harga</label>
+    <input type="number" name="harga"
+      value="<%= data.harga || '' %>" min="1" required>
+
+    <label>Kapasitas (orang)</label>
+    <input type="number" name="kapasitas"
+      value="<%= data.kapasitas || '' %>" min="1" required>
+
+    <label>Ketersediaan</label>
+    <select name="tersedia">
+      <option value="1" <%= data.tersedia ? 'selected' : '' %>>
+        Tersedia
+      </option>
+      <option value="0" <%= !data.tersedia ? 'selected' : '' %>>
+        Tidak tersedia
+      </option>
+    </select>
+
+    <p>Gambar saat ini:</p>
+    <% if (data.gambar) { %>
+      <img src="/uploads/menu/<%= data.gambar %>"
+           width="120" alt="Gambar paket">
+    <% } else { %>
+      <p>Belum ada gambar.</p>
+    <% } %>
+
+    <label>Ganti Gambar (opsional)</label>
+    <input type="file" name="gambar" accept=".jpg,.jpeg,.png">
+
+    <br><br>
+    <button type="submit">Simpan Perubahan</button>
+    <a href="/paket">Kembali</a>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

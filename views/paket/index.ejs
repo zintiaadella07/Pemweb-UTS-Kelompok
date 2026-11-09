@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container">
+  <h1>Daftar Paket Katering</h1>
+
+  <% if (pesan) { %>
+    <p><%= pesan %></p>
+  <% } %>
+
+  <p><a href="/paket/tambah">+ Tambah Paket</a></p>
+
+  <% if (pakets.length === 0) { %>
+    <p>Belum ada paket katering.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Gambar</th>
+          <th>Nama Paket</th>
+          <th>Harga</th>
+          <th>Kapasitas</th>
+          <th>Ketersediaan</th>
+          <th>Deskripsi</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pakets.forEach((p, i) => { %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td>
+              <% if (p.gambar) { %>
+                <img
+                src="/uploads/paket/<%= p.gambar %>"
+                width="80"
+                alt="Gambar paket"
+>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td><%= p.nama_paket %></td>
+            <td><%= rupiah(p.harga) %></td>
+            <td><%= p.kapasitas %> orang</td>
+            <td><%= p.tersedia ? 'Tersedia' : 'Tidak tersedia' %></td>
+            <td><%= p.deskripsi || '-' %></td>
+            <td>
+              <a href="/paket/<%= p.id %>/edit">Edit</a>
+
+              <form action="/paket/<%= p.id %>/hapus"
+                    method="POST"
+                    style="display:inline">
+                <button type="submit"
+                  onclick="return confirm('Yakin ingin menghapus paket ini?')">
+                  Hapus
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

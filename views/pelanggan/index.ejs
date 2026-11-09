@@ -1,0 +1,64 @@
+
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container">
+  <h1>Daftar Pelanggan</h1>
+
+  <% if (pesan) { %>
+    <p><%= pesan %></p>
+  <% } %>
+
+  <p>
+    <a href="/pelanggan/tambah">+ Tambah Pelanggan</a>
+  </p>
+
+  <% if (pelangganList.length === 0) { %>
+    <p>Belum ada data pelanggan.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Pelanggan</th>
+          <th>No. HP</th>
+          <th>Email</th>
+          <th>Alamat</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% pelangganList.forEach((p, i) => { %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= p.nama_pelanggan %></td>
+            <td><%= p.no_telepon %></td>
+            <td><%= p.email || '-' %></td>
+            <td><%= p.alamat || '-' %></td>
+            <td>
+              <a href="/pelanggan/<%= p.id_pelanggan %>/edit">
+                Edit
+              </a>
+
+              <form
+                action="/pelanggan/<%= p.id_pelanggan %>/hapus"
+                method="POST"
+                style="display:inline"
+              >
+                <button
+                  type="submit"
+                  onclick="return confirm('Yakin ingin menghapus pelanggan ini?')"
+                >
+                  Hapus
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

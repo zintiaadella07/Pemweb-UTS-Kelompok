@@ -1,0 +1,55 @@
+
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container">
+  <h1>Tambah Pelanggan</h1>
+
+  <% if (errors.length > 0) { %>
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form action="/pelanggan/tambah" method="POST">
+
+    <label>Nama Pelanggan</label>
+    <input
+      type="text"
+      name="nama"
+      value="<%= data.nama || '' %>"
+      maxlength="100"
+      required
+    >
+
+    <label>Nomor HP</label>
+    <input
+      type="text"
+      name="no_hp"
+      value="<%= data.no_hp || '' %>"
+      maxlength="20"
+      required
+    >
+
+    <label>Email</label>
+    <input
+      type="email"
+      name="email"
+      value="<%= data.email || '' %>"
+      maxlength="100"
+    >
+
+    <label>Alamat</label>
+    <textarea name="alamat"><%= data.alamat || '' %></textarea>
+
+    <br><br>
+
+    <button type="submit">Simpan Pelanggan</button>
+    <a href="/pelanggan">Kembali</a>
+
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

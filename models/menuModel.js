@@ -1,28 +1,29 @@
+
 const pool = require('../config/db');
 
-// Semua query memakai SQL statis + tanda penampung (?). Tidak ada ${} atau
-// penggabungan string pada SQL. Filter opsional ditangani lewat kondisi
-// (? = '' OR ...) sehingga teks query-nya selalu tetap.
+async function getAll({ kategori, q } = {}) {
+  let sql = 'SELECT * FROM menu WHERE 1=1';
+  const params = [];
 
-// filter opsional: { kategori, q } -> untuk ?kategori= dan pencarian nama
-async function getAll(filter = {}) {
-  const kategori = filter.kategori || '';
-  const q = filter.q || '';
+  if (kategori) {
+    sql += ' AND kategori = ?';
+    params.push(kategori);
+  }
 
-  const [rows] = await pool.execute(
-    `SELECT id, nama_menu, kategori, harga, deskripsi, stok, gambar
-      FROM menu
-      WHERE (? = '' OR kategori = ?)
-        AND (? = '' OR nama_menu LIKE CONCAT('%', ?, '%'))
-      ORDER BY id DESC`,
-    [kategori, kategori, q, q]
-  );
+  if (q) {
+    sql += ' AND nama_menu LIKE ?';
+    params.push(`%${q}%`);
+  }
+
+  sql += ' ORDER BY id DESC';
+
+  const [rows] = await pool.execute(sql, params);
   return rows;
 }
 
 async function getById(id) {
   const [rows] = await pool.execute(
-    'SELECT id, nama_menu, kategori, harga, deskripsi, stok, gambar FROM menu WHERE id = ?',
+    'SELECT * FROM menu WHERE id = ?',
     [id]
   );
   return rows[0] || null;
@@ -30,23 +31,59 @@ async function getById(id) {
 
 async function create(data) {
   const [result] = await pool.execute(
-    'INSERT INTO menu (nama_menu, kategori, harga, deskripsi, stok, gambar) VALUES (?, ?, ?, ?, ?, ?)',
-    [data.nama_menu, data.kategori, data.harga, data.deskripsi, data.stok, data.gambar]
+    `INSERT INTO menu
+    (nama_menu, kategori, harga, deskripsi, stok, gambar)
+    VALUES (?, ?, ?, ?, ?, ?)`,
+    [
+      data.nama_menu,
+      data.kategori,
+      data.harga,
+      data.deskripsi,
+      data.stok,
+      data.gambar
+    ]
   );
+
   return result.insertId;
 }
 
 async function update(id, data) {
   const [result] = await pool.execute(
-    'UPDATE menu SET nama_menu = ?, kategori = ?, harga = ?, deskripsi = ?, stok = ?, gambar = ? WHERE id = ?',
-    [data.nama_menu, data.kategori, data.harga, data.deskripsi, data.stok, data.gambar, id]
+    `UPDATE menu SET
+      nama_menu = ?,
+      kategori = ?,
+      harga = ?,
+      deskripsi = ?,
+      stok = ?,
+      gambar = ?
+    WHERE id = ?`,
+    [
+      data.nama_menu,
+      data.kategori,
+      data.harga,
+      data.deskripsi,
+      data.stok,
+      data.gambar,
+      id
+    ]
   );
-  return result.affectedRows;
+
+  return result;
 }
 
 async function remove(id) {
-  const [result] = await pool.execute('DELETE FROM menu WHERE id = ?', [id]);
-  return result.affectedRows;
+  const [result] = await pool.execute(
+    'DELETE FROM menu WHERE id = ?',
+    [id]
+  );
+
+  return result;
 }
 
-module.exports = { getAll, getById, create, update, remove };
+module.exports = {
+  getAll,
+  getById,
+  create,
+  update,
+  remove
+};
