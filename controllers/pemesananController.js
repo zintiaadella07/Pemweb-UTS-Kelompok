@@ -29,6 +29,20 @@ const isPdf = name => /\.pdf$/i.test(name || '');
 const unwrap = r => (Array.isArray(r) ? r[0] : r) || null;
 const hapusFile = name => { if (name) fs.unlink(path.join(BUKTI_DIR, name), () => {}); };
 
+// Samakan nama kolom dari database dengan yang dipakai view & buildData
+const normPaket = k => k && ({
+  ...k,
+  id_paket: k.id_paket ?? k.id,
+  harga_paket: k.harga_paket ?? k.harga
+});
+const normPelanggan = p => p && ({
+  ...p,
+  id_pelanggan: p.id_pelanggan ?? p.id,
+  nama_pelanggan: p.nama_pelanggan ?? p.nama
+});
+// model bisa mengembalikan [rows, fields] atau langsung rows
+const toRows = r => (Array.isArray(r) && Array.isArray(r[0]) ? r[0] : r) || [];
+
 const helpers = { formatRupiah, formatTanggal, toInputDate, badgeStatus, isPdf, STATUS, METODE, hariIni: today() };
 const render = (req, res, view, data = {}) =>
   res.render(view, { sukses: req.query.sukses || null, error: req.query.error || null, ...helpers, ...data });
@@ -75,13 +89,16 @@ function buildData(body, paket, bukti) {
 }
 
 async function dropdowns() {
-  const [pelangganList, paketList] = await Promise.all([pelangganModel.getAll(), paketModel.getAll()]);
-  return { pelangganList, paketList };
+  const [pelangganRaw, paketRaw] = await Promise.all([pelangganModel.getAll(), paketModel.getAll()]);
+  return {
+    pelangganList: toRows(pelangganRaw).map(normPelanggan),
+    paketList: toRows(paketRaw).map(normPaket)
+  };
 }
 
 // cek pelanggan & paket benar-benar ada, tambahkan error kalau tidak
 async function lookup(body, errors) {
-  const paket = body.id_paket ? unwrap(await paketModel.getById(body.id_paket)) : null;
+  const paket = body.id_paket ? normPaket(unwrap(await paketModel.getById(body.id_paket))) : null;
   const pelanggan = body.id_pelanggan ? unwrap(await pelangganModel.getById(body.id_pelanggan)) : null;
   if (body.id_paket && !paket) errors.push('Paket tidak ditemukan.');
   if (body.id_pelanggan && !pelanggan) errors.push('Pelanggan tidak ditemukan.');
@@ -169,7 +186,7 @@ exports.destroy = async (req, res, next) => {
 
 exports.riwayat = async (req, res, next) => {
   try {
-    const pelanggan = unwrap(await pelangganModel.getById(req.params.id));
+    const pelanggan = normPelanggan(unwrap(await pelangganModel.getById(req.params.id)));
     if (!pelanggan) return next();
     const daftar = await pemesananModel.getByPelanggan(req.params.id);
     render(req, res, 'pemesanan/riwayat', { pelanggan, daftar });

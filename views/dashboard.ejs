@@ -1,14 +1,35 @@
-<%- include('partials/header', { title: title }) %>
+
+<%- include('partials/header') %>
 <%- include('partials/navbar') %>
 
-<main class="container">
+<main class="container dashboard-page">
   <h1>Dashboard</h1>
+
   <div class="cards">
-    <a class="card" href="/menu"><span class="angka"><%= total.menu %></span><span>Menu</span></a>
-    <a class="card" href="/paket"><span class="angka"><%= total.paket %></span><span>Paket</span></a>
-    <a class="card" href="/pelanggan"><span class="angka"><%= total.pelanggan %></span><span>Pelanggan</span></a>
-    <a class="card" href="/pemesanan"><span class="angka"><%= total.pemesanan %></span><span>Pemesanan</span></a>
+    <a class="card" href="/menu">
+      <h2>10</h2>
+      <p>Menu</p>
+    </a>
+
+    <a class="card" href="/paket">
+      <h2>3</h2>
+      <p>Paket</p>
+    </a>
+
+    <a class="card" href="/pelanggan">
+      <h2>5</h2>
+      <p>Pelanggan</p>
+    </a>
+
+    <a class="card" href="/pemesanan">
+      <h2>5</h2>
+      <p>Pemesanan</p>
+    </a>
   </div>
+
+  <p class="dashboard-description">
+    UTS Pemrograman Web - Aplikasi Pemesanan Paket Katering
+  </p>
 </main>
 
 <%- include('partials/footer') %>

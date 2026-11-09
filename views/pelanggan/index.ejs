@@ -2,63 +2,117 @@
 <%- include('../partials/header') %>
 <%- include('../partials/navbar') %>
 
-<main class="container">
-  <h1>Daftar Pelanggan</h1>
+<main class="container pelanggan-page">
+
+  <div class="pelanggan-heading">
+    <div>
+      <h1>Daftar Pelanggan</h1>
+      <p>Kelola data pelanggan katering dengan mudah.</p>
+    </div>
+
+    <a href="/pelanggan/tambah" class="btn-tambah-pelanggan">
+      + Tambah Pelanggan
+    </a>
+  </div>
 
   <% if (pesan) { %>
-    <p><%= pesan %></p>
+    <div class="pelanggan-alert">
+      <%= pesan %>
+    </div>
   <% } %>
 
-  <p>
-    <a href="/pelanggan/tambah">+ Tambah Pelanggan</a>
-  </p>
+  <div class="pelanggan-summary">
+    <div class="summary-icon">👥</div>
+    <div>
+      <span>Total Pelanggan</span>
+      <h2><%= pelangganList.length %></h2>
+    </div>
+  </div>
 
-  <% if (pelangganList.length === 0) { %>
-    <p>Belum ada data pelanggan.</p>
-  <% } else { %>
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama Pelanggan</th>
-          <th>No. HP</th>
-          <th>Email</th>
-          <th>Alamat</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
+  <section class="pelanggan-table-card">
+    <div class="table-heading">
+      <div>
+        <h2>Data Pelanggan</h2>
+        <p>Daftar seluruh pelanggan yang terdaftar.</p>
+      </div>
+    </div>
 
-      <tbody>
-        <% pelangganList.forEach((p, i) => { %>
-          <tr>
-            <td><%= i + 1 %></td>
-            <td><%= p.nama_pelanggan %></td>
-            <td><%= p.no_telepon %></td>
-            <td><%= p.email || '-' %></td>
-            <td><%= p.alamat || '-' %></td>
-            <td>
-              <a href="/pelanggan/<%= p.id_pelanggan %>/edit">
-                Edit
-              </a>
+    <% if (pelangganList.length === 0) { %>
+      <div class="pelanggan-empty">
+        <h3>Belum Ada Data Pelanggan</h3>
+        <p>Silakan tambahkan data pelanggan terlebih dahulu.</p>
+        <a href="/pelanggan/tambah" class="btn-tambah-pelanggan">
+          + Tambah Pelanggan
+        </a>
+      </div>
+    <% } else { %>
 
-              <form
-                action="/pelanggan/<%= p.id_pelanggan %>/hapus"
-                method="POST"
-                style="display:inline"
-              >
-                <button
-                  type="submit"
-                  onclick="return confirm('Yakin ingin menghapus pelanggan ini?')"
-                >
-                  Hapus
-                </button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  <% } %>
+      <div class="pelanggan-table-wrap">
+        <table class="pelanggan-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Pelanggan</th>
+              <th>Nomor HP</th>
+              <th>Email</th>
+              <th>Alamat</th>
+              <th class="aksi-column">Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% pelangganList.forEach((p, i) => { %>
+              <tr>
+                <td class="nomor-column"><%= i + 1 %></td>
+
+                <td>
+                  <span class="nama-pelanggan">
+                    <%= p.nama_pelanggan %>
+                  </span>
+                </td>
+
+                <td><%= p.no_telepon %></td>
+
+                <td><%= p.email || '-' %></td>
+
+                <td class="alamat-column">
+                  <%= p.alamat || '-' %>
+                </td>
+
+                <td class="aksi-column">
+                  <div class="aksi-buttons">
+                    <a
+                      href="/pelanggan/<%= p.id_pelanggan %>/edit"
+                      class="btn-edit"
+                    >
+                      Edit
+                    </a>
+
+                    <form
+                      action="/pelanggan/<%= p.id_pelanggan %>/hapus"
+                      method="POST"
+                      onsubmit="return confirm('Yakin ingin menghapus pelanggan ini?')"
+                    >
+                      <button type="submit" class="btn-hapus">
+                        Hapus
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        Menampilkan <strong><%= pelangganList.length %></strong>
+        data pelanggan.
+      </div>
+
+    <% } %>
+  </section>
+
 </main>
 
 <%- include('../partials/footer') %>

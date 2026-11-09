@@ -1,27 +1,26 @@
+
 const express = require('express');
-<<<<<<< HEAD
-=======
 const paketController = require('../controllers/paketController');
 const { uploadGambarPaket } = require('../middleware/upload');
 
->>>>>>> ef12c33 (Perbaikan upload dan tampilan gambar menu dan paket)
 const router = express.Router();
-const ctrl = require('../controllers/paketController');
 
-<<<<<<< HEAD
-router.get('/', ctrl.index);
-router.get('/tambah', ctrl.tambahForm);
-router.post('/tambah', ctrl.store);
-router.get('/:id/edit', ctrl.editForm);
-router.post('/:id/edit', ctrl.update);
-router.post('/:id/hapus', ctrl.destroy);
-=======
+// Menampilkan daftar paket
 router.get('/', paketController.index);
+
+// Form tambah paket
 router.get('/tambah', paketController.tambahForm);
+
+// Menyimpan paket baru
 router.post('/tambah', uploadGambarPaket, paketController.store);
+
+// Form edit paket
 router.get('/edit/:id', paketController.editForm);
+
+// Memperbarui data paket
 router.post('/edit/:id', uploadGambarPaket, paketController.update);
+
+// Menghapus paket
 router.post('/hapus/:id', paketController.destroy);
->>>>>>> ef12c33 (Perbaikan upload dan tampilan gambar menu dan paket)
 
 module.exports = router;

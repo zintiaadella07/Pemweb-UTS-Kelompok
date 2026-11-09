@@ -1,8 +1,9 @@
+
 <%- include('../partials/header') %>
 <%- include('../partials/navbar') %>
 
 <main class="container">
-  <h1>Tambah Paket</h1>
+  <h1>Tambah Menu</h1>
 
   <% if (errors.length > 0) { %>
     <ul>
@@ -12,21 +13,79 @@
     </ul>
   <% } %>
 
-  <form action="/paket/tambah" method="POST">
+  <form action="/menu/tambah" method="POST" enctype="multipart/form-data">
+
     <div>
-      <label for="nama_paket">Nama paket</label>
-      <input type="text" id="nama_paket" name="nama_paket" value="<%= paket.nama_paket || '' %>" required>
+      <label for="nama_menu">Nama Menu</label>
+      <input
+        type="text"
+        id="nama_menu"
+        name="nama_menu"
+        value="<%= menu.nama_menu || '' %>"
+        required
+      >
     </div>
+
+    <div>
+      <label for="kategori">Kategori</label>
+      <select id="kategori" name="kategori" required>
+        <% kategoriList.forEach(function (kategori) { %>
+          <option
+            value="<%= kategori %>"
+            <%= menu.kategori === kategori ? 'selected' : '' %>
+          >
+            <%= kategori %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
     <div>
       <label for="harga">Harga (Rp)</label>
-      <input type="number" id="harga" name="harga" min="1" value="<%= paket.harga || '' %>" required>
+      <input
+        type="number"
+        id="harga"
+        name="harga"
+        min="1"
+        value="<%= menu.harga || '' %>"
+        required
+      >
     </div>
+
+    <div>
+      <label for="stok">Stok</label>
+      <input
+        type="number"
+        id="stok"
+        name="stok"
+        min="0"
+        value="<%= menu.stok ?? 0 %>"
+        required
+      >
+    </div>
+
     <div>
       <label for="deskripsi">Deskripsi</label>
-      <textarea id="deskripsi" name="deskripsi" rows="3"><%= paket.deskripsi || '' %></textarea>
+      <textarea
+        id="deskripsi"
+        name="deskripsi"
+        rows="3"
+      ><%= menu.deskripsi || '' %></textarea>
     </div>
+
+    <div>
+      <label for="gambar">Gambar Menu</label>
+      <input
+        type="file"
+        id="gambar"
+        name="gambar"
+        accept="image/*"
+      >
+    </div>
+
     <button type="submit">Simpan</button>
-    <a href="/paket">Batal</a>
+    <a href="/menu">Batal</a>
+
   </form>
 </main>
 

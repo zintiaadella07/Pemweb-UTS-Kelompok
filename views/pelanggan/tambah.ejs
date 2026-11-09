@@ -2,54 +2,83 @@
 <%- include('../partials/header') %>
 <%- include('../partials/navbar') %>
 
-<main class="container">
-  <h1>Tambah Pelanggan</h1>
+<main class="container form-page">
+  <div class="form-card">
+    <div class="form-heading">
+      <h1>Tambah Pelanggan</h1>
+      <p>Silakan isi data pelanggan dengan lengkap.</p>
+    </div>
 
-  <% if (errors.length > 0) { %>
-    <ul>
-      <% errors.forEach(error => { %>
-        <li><%= error %></li>
-      <% }) %>
-    </ul>
-  <% } %>
+    <% if (errors && errors.length > 0) { %>
+      <div class="form-errors">
+        <strong>Periksa kembali data berikut:</strong>
+        <ul>
+          <% errors.forEach(error => { %>
+            <li><%= error %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
 
-  <form action="/pelanggan/tambah" method="POST">
+    <form action="/pelanggan/tambah" method="POST" class="data-form">
 
-    <label>Nama Pelanggan</label>
-    <input
-      type="text"
-      name="nama"
-      value="<%= data.nama || '' %>"
-      maxlength="100"
-      required
-    >
+      <div class="form-group">
+        <label for="nama">Nama Pelanggan</label>
+        <input
+          type="text"
+          id="nama"
+          name="nama"
+          value="<%= data.nama || '' %>"
+          placeholder="Masukkan nama pelanggan"
+          maxlength="100"
+          required
+        >
+      </div>
 
-    <label>Nomor HP</label>
-    <input
-      type="text"
-      name="no_hp"
-      value="<%= data.no_hp || '' %>"
-      maxlength="20"
-      required
-    >
+      <div class="form-group">
+        <label for="no_hp">Nomor HP</label>
+        <input
+          type="text"
+          id="no_hp"
+          name="no_hp"
+          value="<%= data.no_hp || '' %>"
+          placeholder="Contoh: 081234567890"
+          maxlength="20"
+          required
+        >
+      </div>
 
-    <label>Email</label>
-    <input
-      type="email"
-      name="email"
-      value="<%= data.email || '' %>"
-      maxlength="100"
-    >
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="<%= data.email || '' %>"
+          placeholder="Contoh: nama@email.com"
+          maxlength="100"
+        >
+      </div>
 
-    <label>Alamat</label>
-    <textarea name="alamat"><%= data.alamat || '' %></textarea>
+      <div class="form-group">
+        <label for="alamat">Alamat</label>
+        <textarea
+          id="alamat"
+          name="alamat"
+          rows="4"
+          placeholder="Masukkan alamat lengkap"
+        ><%= data.alamat || '' %></textarea>
+      </div>
 
-    <br><br>
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">
+          Simpan Pelanggan
+        </button>
+        <a href="/pelanggan" class="btn-back">Kembali</a>
+      </div>
 
-    <button type="submit">Simpan Pelanggan</button>
-    <a href="/pelanggan">Kembali</a>
-
-  </form>
+    </form>
+  </div>
 </main>
 
 <%- include('../partials/footer') %>
