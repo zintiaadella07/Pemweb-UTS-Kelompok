@@ -1,8 +1,21 @@
 const pool = require('../config/db');
 
-async function getAll() {
+// Semua query memakai SQL statis + tanda penampung (?). Tidak ada ${} atau
+// penggabungan string pada SQL. Filter opsional ditangani lewat kondisi
+// (? = '' OR ...) sehingga teks query-nya selalu tetap.
+
+// filter opsional: { kategori, q } -> untuk ?kategori= dan pencarian nama
+async function getAll(filter = {}) {
+  const kategori = filter.kategori || '';
+  const q = filter.q || '';
+
   const [rows] = await pool.execute(
-    'SELECT id, nama_menu, kategori, harga, deskripsi, stok, gambar FROM menu ORDER BY id DESC'
+    `SELECT id, nama_menu, kategori, harga, deskripsi, stok, gambar
+      FROM menu
+      WHERE (? = '' OR kategori = ?)
+        AND (? = '' OR nama_menu LIKE CONCAT('%', ?, '%'))
+      ORDER BY id DESC`,
+    [kategori, kategori, q, q]
   );
   return rows;
 }

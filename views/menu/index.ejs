@@ -1,6 +1,15 @@
 <%- include('../partials/header', { title: title }) %>
 <%- include('../partials/navbar') %>
 
+<style>
+  .menu-img { width: 96px; height: 64px; object-fit: cover; border-radius: 6px; display: block; }
+  .badge-habis { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #fde2e1; color: #b42318; font-size: 12px; font-weight: 600; }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .filter-bar select, .filter-bar input[type=text] { width: auto; min-width: 160px; }
+  .btn-hapus { background: #c0392b; }
+  .aksi { display: flex; gap: 8px; align-items: center; }
+</style>
+
 <main class="container">
   <h1>Daftar Menu</h1>
 
@@ -10,8 +19,24 @@
 
   <p><a href="/menu/tambah" class="btn">+ Tambah Menu</a></p>
 
+  <form method="GET" action="/menu" class="filter-bar">
+    <input type="text" name="q" placeholder="Cari nama menu..." value="<%= filter.q %>">
+    <select name="kategori">
+      <option value="">Semua kategori</option>
+      <% kategoriList.forEach(function (k) { %>
+        <option value="<%= k %>" <%= filter.kategori === k ? 'selected' : '' %>><%= k %></option>
+      <% }) %>
+    </select>
+    <button type="submit">Cari</button>
+    <% if (filter.q || filter.kategori) { %><a href="/menu">Reset</a><% } %>
+  </form>
+
   <% if (menus.length === 0) { %>
-    <p>Belum ada menu. Silakan tambah menu baru.</p>
+    <% if (filter.q || filter.kategori) { %>
+      <p>Tidak ada menu yang cocok dengan pencarian.</p>
+    <% } else { %>
+      <p>Belum ada menu. Silakan tambah menu baru.</p>
+    <% } %>
   <% } else { %>
     <div style="overflow-x:auto">
       <table>
@@ -33,21 +58,30 @@
               <td><%= i + 1 %></td>
               <td>
                 <% if (m.gambar) { %>
-                  <img src="<%= m.gambar.startsWith('http') ? m.gambar : '/images/' + m.gambar %>"
-                       alt="<%= m.nama_menu %>" width="60">
+                  <img class="menu-img"
+                       src="<%= /^https?:\/\//.test(m.gambar) ? m.gambar : '/uploads/menu/' + m.gambar %>"
+                       alt="<%= m.nama_menu %>">
                 <% } else { %>-<% } %>
               </td>
               <td><%= m.nama_menu %></td>
               <td><%= m.kategori %></td>
-              <td>Rp <%= Number(m.harga).toLocaleString('id-ID') %></td>
-              <td><%= m.stok %></td>
+              <td><%= rupiah(m.harga) %></td>
+              <td>
+                <% if (Number(m.stok) === 0) { %>
+                  <span class="badge-habis">Habis</span>
+                <% } else { %>
+                  <%= m.stok %>
+                <% } %>
+              </td>
               <td><%= m.deskripsi || '-' %></td>
               <td>
-                <a href="/menu/edit/<%= m.id %>">Edit</a>
-                <form action="/menu/hapus/<%= m.id %>" method="POST" style="display:inline"
-                      onsubmit="return confirm('Hapus menu ini?')">
-                  <button type="submit">Hapus</button>
-                </form>
+                <div class="aksi">
+                  <a href="/menu/edit/<%= m.id %>">Edit</a>
+                  <form action="/menu/hapus/<%= m.id %>" method="POST"
+                        onsubmit="return confirm('Hapus menu ini?')">
+                    <button type="submit" class="btn-hapus">Hapus</button>
+                  </form>
+                </div>
               </td>
             </tr>
           <% }) %>
